@@ -8,9 +8,11 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,14 +29,40 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     static Taskstorage taskstorage;
     ArrayList<String> idrow;
-    private TableRow editrow;
+    TableLayout tableLayout;
+    TableRow editrow;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         taskstorage = new Taskstorage(this);
+        tableLayout = findViewById(R.id.mainactivity_tl);
         inittable();
+    }
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        ToggleButton tb_new = findViewById(R.id.mainactivity_tbnew);
+        ToggleButton tb_pro = findViewById(R.id.mainactivity_tbproces);
+        ToggleButton tb_end = findViewById(R.id.mainactivity_tbend);
+        outState.putBoolean("tb_new",tb_new.isChecked());
+        outState.putBoolean("tb_pro",tb_pro.isChecked());
+        outState.putBoolean("tb_end",tb_end.isChecked());
+
+
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Boolean tb_new_b = savedInstanceState.getBoolean("tb_new");
+        Boolean tb_pro_b = savedInstanceState.getBoolean("tb_pro");
+        Boolean tb_end_b = savedInstanceState.getBoolean("tb_end");
+        Editvisability("но", tb_new_b);
+        Editvisability("в ", tb_pro_b);
+        Editvisability("за", tb_end_b);
+
+
 
     }
 
@@ -43,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         inittable();
     }
+
     private void inittable() {
 
         Map<String, ?> tasks = taskstorage.getAll();
@@ -50,23 +79,21 @@ public class MainActivity extends AppCompatActivity {
         for (Map.Entry entry : tasks.entrySet()) {
             if (entry.getKey().toString().substring(0, 2).equals("da")) {  // ключ = "date"
                 Date date = DateStringToDate(entry.getValue().toString());
-                dateMap.put(entry.getKey().toString(),date);
+                dateMap.put(entry.getKey().toString(), date);
             }
 
         }
-        Map<String,Date> sortedmap = SortMap(dateMap);
-        int a = 10;
-        // заполнить таблицу с помощью tasks sortedmap
+        Map<String, Date> sortedmap = SortMap(dateMap,true);
         TableLayout tl = (TableLayout) findViewById(R.id.mainactivity_tl);
         tl.removeAllViewsInLayout();
         idrow = new ArrayList<>();
-        for (Map.Entry entry : sortedmap.entrySet()){
+        for (Map.Entry entry : sortedmap.entrySet()) {
             String id = entry.getKey().toString().substring(4);
             idrow.add(id);
-            String name = taskstorage.getbyid("name"+id);
-            String date = taskstorage.getbyid("date"+id);
-            String status =taskstorage.getbyid("status"+id);
-            String note =taskstorage.getbyid("note"+id);
+            String name = taskstorage.getbyid("name" + id);
+            String date = taskstorage.getbyid("date" + id);
+            String status = taskstorage.getbyid("status" + id);
+            String note = taskstorage.getbyid("note" + id);
             TableRow tbrow = new TableRow(this);
             registerForContextMenu(tbrow);
             TextView tvr0 = new TextView(this);
@@ -98,18 +125,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private Map<String,Date> SortMap(Map<String, Date> dateMap) {
+    public Map<String, Date> SortMap(Map<String, Date> dateMap, final boolean direct) {
         List<Map.Entry<String, Date>> list =
                 new LinkedList<>(dateMap.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<String, Date>>() {
             @Override
             public int compare(Map.Entry<String, Date> a, Map.Entry<String, Date> b) {
-                return a.getValue().compareTo(b.getValue())*-1;
+                if (direct)
+                return a.getValue().compareTo(b.getValue()) * -1;
+                else
+                    return a.getValue().compareTo(b.getValue()) ;
             }
         });
         Map<String, Date> result = new LinkedHashMap<>();
-        for (Map.Entry<String,Date> entry : list)
-        {
+        for (Map.Entry<String, Date> entry : list) {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
@@ -117,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private Date DateStringToDate(String s) {
+    public static Date DateStringToDate(String s) {
         String[] lines = s.split(" ");
         String mounth = Parsemounth(lines[1]);
         String day = lines[0];
@@ -135,41 +164,30 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private String Parsemounth(String mounth) {
-        if (mounth.equals("января")){
+    private static String Parsemounth(String mounth) {
+        if (mounth.equals("января")) {
             mounth = "01";
-        }
-        else if (mounth.equals("февраля")){
+        } else if (mounth.equals("февраля")) {
             mounth = "02";
-        }
-        else if (mounth.equals("марта")){
+        } else if (mounth.equals("марта")) {
             mounth = "03";
-        }
-        else if (mounth.equals("апреля")){
+        } else if (mounth.equals("апреля")) {
             mounth = "04";
-        }
-        else if (mounth.equals("мая")){
+        } else if (mounth.equals("мая")) {
             mounth = "05";
-        }
-        else if (mounth.equals("июня")){
+        } else if (mounth.equals("июня")) {
             mounth = "06";
-        }
-        else if (mounth.equals("июля")){
+        } else if (mounth.equals("июля")) {
             mounth = "07";
-        }
-        else if (mounth.equals("августа")){
+        } else if (mounth.equals("августа")) {
             mounth = "08";
-        }
-        else if (mounth.equals("сентября")){
+        } else if (mounth.equals("сентября")) {
             mounth = "09";
-        }
-        else if (mounth.equals("октября")){
+        } else if (mounth.equals("октября")) {
             mounth = "10";
-        }
-        else if (mounth.equals("ноября")){
+        } else if (mounth.equals("ноября")) {
             mounth = "11";
-        }
-        else if (mounth.equals("декабря")){
+        } else if (mounth.equals("декабря")) {
             mounth = "12";
         }
 
@@ -180,38 +198,39 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Taskmanager.class);
         startActivity(intent);
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo)
-    {
+                                    ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         menu.add(Menu.NONE, 0, Menu.NONE, "Изменить");
         menu.add(Menu.NONE, 1, Menu.NONE, "Удалить");
         editrow = (TableRow) v;
     }
+
     public boolean onContextItemSelected(MenuItem item) {
-        TableLayout tableLayout = findViewById(R.id.mainactivity_tl);
+
         int id;
-        if (tableLayout.indexOfChild(editrow) == 0 || tableLayout.indexOfChild(editrow) == 1){
-             id = 0;
-        } else if (editrow.getChildCount()>1) {
-             id = tableLayout.indexOfChild(editrow)/2;
+        if (tableLayout.indexOfChild(editrow) == 0 || tableLayout.indexOfChild(editrow) == 1) {
+            id = 0;
+        } else if (editrow.getChildCount() > 1) {
+            id = tableLayout.indexOfChild(editrow) / 2;
         } else {
-             id = (tableLayout.indexOfChild(editrow)-1)/2;
+            id = (tableLayout.indexOfChild(editrow) - 1) / 2;
         }
         switch (item.getItemId()) {
-            case 0:
-                Intent intent = new Intent(this,Taskmanager.class);
-                if (editrow.getChildCount()>1) {
+            case 0: // изменить в зависимости на какой строке вызвали контекстное меню
+                Intent intent = new Intent(this, Taskmanager.class);
+                if (editrow.getChildCount() > 1) {
                     TextView tv0 = (TextView) editrow.getChildAt(0);
                     TextView tv1 = (TextView) editrow.getChildAt(1);
                     TextView tv2 = (TextView) editrow.getChildAt(2);
                     TableRow tr = (TableRow) tableLayout.getChildAt(tableLayout.indexOfChild(editrow) + 1);
                     TextView tv3 = (TextView) tr.getChildAt(0);
-                    intent.putExtra("task", tv0.getText().toString().replace("  ",""));
-                    intent.putExtra("date", tv1.getText().toString().replace("  ",""));
-                    intent.putExtra("status", tv2.getText().toString().replace("  ",""));
-                    intent.putExtra("note", tv3.getText().toString().replace("  ",""));
+                    intent.putExtra("task", tv0.getText().toString().replace("  ", ""));
+                    intent.putExtra("date", tv1.getText().toString().replace("  ", ""));
+                    intent.putExtra("status", tv2.getText().toString().replace("  ", ""));
+                    intent.putExtra("note", tv3.getText().toString().replace("  ", ""));
                     intent.putExtra("id", Integer.toString(id));
                 } else {
                     TableRow tr = (TableRow) tableLayout.getChildAt(tableLayout.indexOfChild(editrow) - 1);
@@ -228,22 +247,53 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
 
                 break;
-            case 1:
-                if (editrow.getChildCount()>1) {
-                    tableLayout.removeView(tableLayout.getChildAt(tableLayout.indexOfChild(editrow)+1));
+            case 1: // удалить в зависимости на какой строке вызвали контекстное меню
+                if (editrow.getChildCount() > 1) {
+                    tableLayout.removeView(tableLayout.getChildAt(tableLayout.indexOfChild(editrow) + 1));
                     tableLayout.removeView(editrow);
-                }
-                else {
-                    tableLayout.removeView(tableLayout.getChildAt(tableLayout.indexOfChild(editrow)-1));
+                } else {
+                    tableLayout.removeView(tableLayout.getChildAt(tableLayout.indexOfChild(editrow) - 1));
                     tableLayout.removeView(editrow);
                 }
 
                 taskstorage.removeTask((idrow.get(id)));
                 idrow.remove(id);
+                TaskWidget.updateMyWidgets(this);
                 break;
 
         }
         return true;
     }
 
+    public void Tb_clicked(View view) {
+        boolean on = ((ToggleButton) view).isChecked();
+        switch (view.getId()){
+            case R.id.mainactivity_tbnew:
+                Editvisability("но", on);
+                break;
+            case R.id.mainactivity_tbproces:
+                Editvisability("в ", on);
+                break;
+            case R.id.mainactivity_tbend:
+                Editvisability("за", on);
+                break;
+        }
+    }
+
+    private void Editvisability(String status, boolean on) {
+        for (int i = 0; i < tableLayout.getChildCount(); i += 2) {
+            TableRow tr1 = (TableRow) tableLayout.getChildAt(i);
+            TableRow tr2 = (TableRow) tableLayout.getChildAt(i + 1);
+            TextView status_tv = (TextView) tr1.getChildAt(2);
+            if (status_tv.getText().toString().substring(2, 4).equals(status)) {
+                if (on) {
+                    tr1.setVisibility(View.GONE);
+                    tr2.setVisibility(View.GONE);
+                } else {
+                    tr1.setVisibility(View.VISIBLE);
+                    tr2.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
 }

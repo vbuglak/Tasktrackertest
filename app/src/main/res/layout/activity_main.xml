@@ -53,7 +53,8 @@
                 android:text="@string/status_new"
                 android:textOff="@string/status_new"
                 android:textOn="@string/status_new"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:onClick="Tb_clicked"/>
 
             <ToggleButton
                 android:id="@+id/mainactivity_tbproces"
@@ -63,7 +64,8 @@
                 android:text="@string/status_in_process"
                 android:textOff="@string/status_in_process"
                 android:textOn="@string/status_in_process"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:onClick="Tb_clicked"/>
 
             <ToggleButton
                 android:id="@+id/mainactivity_tbend"
@@ -74,7 +76,8 @@
                 android:text="@string/status_ended"
                 android:textOff="@string/status_ended"
                 android:textOn="@string/status_ended"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:onClick="Tb_clicked"/>
 
         </LinearLayout>
 

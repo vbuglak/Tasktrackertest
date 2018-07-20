@@ -34,6 +34,7 @@ public class Taskmanager extends AppCompatActivity {
             new_checkbox.setClickable(false);
             edit = false;
         } else {
+            edit = true;
             Button addedit_but = findViewById(R.id.taskmanager_add_edit_but);
             addedit_but.setText("Изменить");
             EditText Task_ed = findViewById(R.id.taskmanager_task_et);
@@ -58,6 +59,54 @@ public class Taskmanager extends AppCompatActivity {
 
         }
     }
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        EditText Task_ed = findViewById(R.id.taskmanager_task_et);
+        EditText Note_ed = findViewById(R.id.taskmanager_note_et);
+        CheckBox new_checkbox = findViewById(R.id.taskmanager_status_new_cb);
+        CheckBox pro_checkbox = findViewById(R.id.taskmanager_status_pro_cb);
+        CheckBox end_checkbox = findViewById(R.id.taskmanager_status_end_cb);
+        if (new_checkbox.isChecked()){
+            outState.putString("cb_checked","0");
+        } else if (pro_checkbox.isChecked()) {
+            outState.putString("cb_checked", "1");
+        } else if (end_checkbox.isChecked()) {
+            outState.putString("cb_checked", "2");
+        }
+        outState.putString("task",Task_ed.getText().toString());
+        outState.putString("note",Note_ed.getText().toString());
+
+
+
+    }
+
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        EditText Task_ed = findViewById(R.id.taskmanager_task_et);
+        EditText Note_ed = findViewById(R.id.taskmanager_note_et);
+        CheckBox new_checkbox = findViewById(R.id.taskmanager_status_new_cb);
+        CheckBox pro_checkbox = findViewById(R.id.taskmanager_status_pro_cb);
+        CheckBox end_checkbox = findViewById(R.id.taskmanager_status_end_cb);
+        Task_ed.setText(savedInstanceState.getString("task"));
+        Note_ed.setText(savedInstanceState.getString("note"));
+        switch (savedInstanceState.getString("cb_checked")){
+            case "0":
+                new_checkbox.setChecked(true);
+                break;
+            case "1":
+                pro_checkbox.setChecked(true);
+                pro_checkbox.setClickable(false);
+                new_checkbox.setClickable(true);
+                break;
+            case "2":
+                end_checkbox.setChecked(true);
+                end_checkbox.setClickable(false);
+                new_checkbox.setClickable(true);
+                break;
+        }
+    }
+
+
 
     private void setInitialDateTime() {
 
@@ -146,7 +195,7 @@ public class Taskmanager extends AppCompatActivity {
         {
             statusint = 2; // 2 - статус "завершенный"
         }
-        if (task_ed.getText().length()==0 || note_ed.getText().length()==0)
+        if (task_ed.getText().length()==0)
         {
             Toast toastcheck = Toast.makeText(getApplicationContext(),
                     "Поля не заполнены", Toast.LENGTH_SHORT);
@@ -161,9 +210,15 @@ public class Taskmanager extends AppCompatActivity {
                 MainActivity.taskstorage.addTask(task_ed.getText().toString(), date_tv.getText().toString(), statusint, note_ed.getText().toString());
                 super.onBackPressed();
             }
-
+            TaskWidget.updateMyWidgets(this);
         }
 
 
     }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
 }

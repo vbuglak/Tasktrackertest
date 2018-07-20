@@ -9,5 +9,9 @@
     <string name="tm_status_ended">Завершенный</string>
     <string name="tm_add_but">Добавить</string>
     <string name="tm_edit_but">Изменить</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Добавить виджет</string>
+    <string name="move">Перейти</string>
+
 
 </resources>

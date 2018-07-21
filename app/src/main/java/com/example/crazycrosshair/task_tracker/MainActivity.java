@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    static Taskstorage taskstorage;
+    Taskstorage taskstorage;
     ArrayList<String> idrow; // массив для хранения id строк таблицы. Индекс масива совпадает с номером строки. Строка подразумевает два tablerow.
     TableLayout tableLayout;
     TableRow editrow; // tablerow который вызывает контекстное меню
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
             TableRow tr2 = (TableRow) tableLayout.getChildAt(i + 1);
             TextView status_tv = (TextView) tr1.getChildAt(2);
             if (status_tv.getText().toString().substring(0, 2).equals(status)) {
-                if (on) {
+                if (!on) {
                     tr1.setVisibility(View.GONE);
                     tr2.setVisibility(View.GONE);
                 } else {

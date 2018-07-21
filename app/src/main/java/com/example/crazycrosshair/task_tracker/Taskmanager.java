@@ -17,6 +17,7 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 public class Taskmanager extends AppCompatActivity {
+    Taskstorage taskstorage;
     TextView Date_tv;
     Calendar Datecal = Calendar.getInstance();
     boolean edit;
@@ -26,6 +27,7 @@ public class Taskmanager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_taskmanager);
+        taskstorage = new Taskstorage(this);
 
     }
     @Override
@@ -220,10 +222,10 @@ public class Taskmanager extends AppCompatActivity {
         else
         {
             if (edit) {
-                MainActivity.taskstorage.editTask(task_ed.getText().toString(), date_tv.getText().toString(), statusint, note_ed.getText().toString(),intent.getStringExtra("id"));
+                taskstorage.editTask(task_ed.getText().toString(), date_tv.getText().toString(), statusint, note_ed.getText().toString(),intent.getStringExtra("id"));
                 super.onBackPressed();
             } else {
-                MainActivity.taskstorage.addTask(task_ed.getText().toString(), date_tv.getText().toString(), statusint, note_ed.getText().toString());
+                taskstorage.addTask(task_ed.getText().toString(), date_tv.getText().toString(), statusint, note_ed.getText().toString());
                 super.onBackPressed();
             }
             TaskWidget.updateMyWidgets(this);

@@ -36,10 +36,18 @@ public class Taskmanager extends AppCompatActivity {
         EditText Task_ed = findViewById(R.id.taskmanager_task_et);
         EditText Note_ed = findViewById(R.id.taskmanager_note_et);
         Button addedit_but = findViewById(R.id.taskmanager_add_edit_but);
-        Task_ed.setText("");
+        CheckBox new_checkbox = findViewById(R.id.taskmanager_status_new_cb);
+        CheckBox pro_checkbox = findViewById(R.id.taskmanager_status_pro_cb);
+        CheckBox end_checkbox = findViewById(R.id.taskmanager_status_end_cb);
+        Task_ed.setText("");                                        // возвращаем исходное состояние
         Note_ed.setText("");
         addedit_but.setText("Добавить");
-        CheckBox new_checkbox = findViewById(R.id.taskmanager_status_new_cb);
+        new_checkbox.setClickable(false);
+        new_checkbox.setChecked(true);
+        pro_checkbox.setClickable(true);
+        pro_checkbox.setChecked(false);
+        end_checkbox.setClickable(true);
+        end_checkbox.setChecked(false);
         if (intent.getStringExtra("task") == null){
             setInitialDateTime();
             new_checkbox.setClickable(false);
@@ -54,13 +62,13 @@ public class Taskmanager extends AppCompatActivity {
                 new_checkbox.setClickable(false);
                 new_checkbox.setChecked(true);
             } else if(intent.getStringExtra("status").equals("в процессе")){
+                new_checkbox.setClickable(true);
                 new_checkbox.setChecked(false);
-                CheckBox pro_checkbox = findViewById(R.id.taskmanager_status_pro_cb);
                 pro_checkbox.setClickable(false);
                 pro_checkbox.setChecked(true);
             } else if(intent.getStringExtra("status").equals("завершенный")){
+                new_checkbox.setClickable(true);
                 new_checkbox.setChecked(false);
-                CheckBox end_checkbox = findViewById(R.id.taskmanager_status_end_cb);
                 end_checkbox.setClickable(false);
                 end_checkbox.setChecked(true);
             }

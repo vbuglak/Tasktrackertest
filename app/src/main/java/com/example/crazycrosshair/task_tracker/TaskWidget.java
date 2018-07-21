@@ -56,7 +56,6 @@ public class TaskWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.task_tv,"Задач нет");
             views.setTextViewText(R.id.date_tv,"");
             views.setTextViewText(R.id.movebut,"Создать");
-
         }
         views.setOnClickPendingIntent(R.id.movebut, pendingIntent);
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -75,29 +74,33 @@ public class TaskWidget extends AppWidgetProvider {
             int appWidgetId = appWidgetIds[j];
             try {Taskstorage taskstoragew = new Taskstorage(context);
                 Map<String, ?> tasks = taskstoragew.getAll();
-                Map<String, Date> dateMap = new HashMap<String, Date>();
-                for (Map.Entry entry : tasks.entrySet()) {
-                    if (entry.getKey().toString().substring(0, 2).equals("da")) {  // ключ = "date"
-                        Date date = MainActivity.DateStringToDate(entry.getValue().toString());
-                        dateMap.put(entry.getKey().toString(), date);
-                    }
+                if (tasks.size()>1) {
+                    Map<String, Date> dateMap = new HashMap<String, Date>();
+                    for (Map.Entry entry : tasks.entrySet()) {
+                        if (entry.getKey().toString().substring(0, 2).equals("da")) {  // ключ = "date"
+                            Date date = MainActivity.DateStringToDate(entry.getValue().toString());
+                            dateMap.put(entry.getKey().toString(), date);
+                        }
 
-                }
-                Map<String, Date> sortedmap = SortMap(dateMap,false);
-                for (Map.Entry entry :  sortedmap.entrySet()) {
-                    if (current.compareTo((Date)entry.getValue())==-1){
-                        if (!taskstoragew.getbyid("status"+entry.getKey().toString().substring(4)).equals("завершенный")){
-                            names = taskstoragew.getbyid("name"+entry.getKey().toString().substring(4));
-                            dates = taskstoragew.getbyid("date"+entry.getKey().toString().substring(4));
-                            statuss = taskstoragew.getbyid("status"+entry.getKey().toString().substring(4));
-                            notes =taskstoragew.getbyid("note"+entry.getKey().toString().substring(4));
-                            ids = entry.getKey().toString().substring(4);
-                            break;
+                    }
+                    Map<String, Date> sortedmap = SortMap(dateMap, false);
+                    for (Map.Entry entry : sortedmap.entrySet()) {
+                        if (current.compareTo((Date) entry.getValue()) == -1) {
+                            if (!taskstoragew.getbyid("status" + entry.getKey().toString().substring(4)).equals("завершенный")) {
+                                names = taskstoragew.getbyid("name" + entry.getKey().toString().substring(4));
+                                dates = taskstoragew.getbyid("date" + entry.getKey().toString().substring(4));
+                                statuss = taskstoragew.getbyid("status" + entry.getKey().toString().substring(4));
+                                notes = taskstoragew.getbyid("note" + entry.getKey().toString().substring(4));
+                                ids = entry.getKey().toString().substring(4);
+                                break;
+                            }
+                        } else {
+                            dates = "";
                         }
                     }
-                    else {
-                        dates = "";
-                    }
+                }
+                else {
+                    dates = "";
                 }
             }
             catch (ActivityNotFoundException e) {

@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
         outState.putBoolean("tb_new",tb_new.isChecked());
         outState.putBoolean("tb_pro",tb_pro.isChecked());
         outState.putBoolean("tb_end",tb_end.isChecked());
-
-
     }
 
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -62,15 +60,13 @@ public class MainActivity extends AppCompatActivity {
         Editvisability("но", tb_new_b);
         Editvisability("в ", tb_pro_b);
         Editvisability("за", tb_end_b);
-
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         inittable();
+        initfilter();
     }
 
     private void inittable() {
@@ -82,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
                 Date date = DateStringToDate(entry.getValue().toString());
                 dateMap.put(entry.getKey().toString(), date); // создаем map только с датами
             }
-
         }
         Map<String, Date> sortedmap = SortMap(dateMap,true);
         TableLayout tl = (TableLayout) findViewById(R.id.mainactivity_tl);
@@ -98,17 +93,17 @@ public class MainActivity extends AppCompatActivity {
             TableRow tbrow = new TableRow(this);
             registerForContextMenu(tbrow);
             TextView tvr0 = new TextView(this);
-            tvr0.setText("  " + name + "  ");
+            tvr0.setText(name);
             tvr0.setTextColor(Color.BLACK);
             tvr0.setTextSize(20);
             tbrow.addView(tvr0);
             TextView tvr1 = new TextView(this);
-            tvr1.setText("  " + date + "  ");
+            tvr1.setText(date);
             tvr1.setTextColor(Color.BLACK);
             tvr1.setTextSize(20);
             tbrow.addView(tvr1);
             TextView tvr2 = new TextView(this);
-            tvr2.setText("  " + status + "  ");
+            tvr2.setText(status);
             tvr2.setTextColor(Color.BLACK);
             tvr2.setTextSize(20);
             tbrow.addView(tvr2);
@@ -116,14 +111,21 @@ public class MainActivity extends AppCompatActivity {
             TableRow tbrow1 = new TableRow(this);
             registerForContextMenu(tbrow1);
             TextView tvr3 = new TextView(this);
-            tvr3.setText("  " + note + "  ");
+            tvr3.setText(note);
             tvr3.setTextColor(Color.BLACK);
             tvr3.setTextSize(20);
             tbrow1.addView(tvr3);
             tl.addView(tbrow1);
-
         }
+    }
 
+    private void initfilter() {
+        ToggleButton tb_new = findViewById(R.id.mainactivity_tbnew);
+        ToggleButton tb_pro = findViewById(R.id.mainactivity_tbproces);
+        ToggleButton tb_end = findViewById(R.id.mainactivity_tbend);
+        Editvisability("но", tb_new.isChecked());
+        Editvisability("в ", tb_pro.isChecked());
+        Editvisability("за", tb_end.isChecked());
     }
 
     public Map<String, Date> SortMap(Map<String, Date> dateMap, final boolean direct) {
@@ -143,8 +145,6 @@ public class MainActivity extends AppCompatActivity {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
-
-
     }
 
     public static Date DateStringToDate(String s) {
@@ -162,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return (docDate);
-
     }
 
     private static String Parsemounth(String mounth) {
@@ -232,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("date", tv1.getText().toString().replace("  ", ""));
                     intent.putExtra("status", tv2.getText().toString().replace("  ", ""));
                     intent.putExtra("note", tv3.getText().toString().replace("  ", ""));
-                    intent.putExtra("id", Integer.toString(id));
+                    intent.putExtra("id", idrow.get(id));
                 } else {
                     TableRow tr = (TableRow) tableLayout.getChildAt(tableLayout.indexOfChild(editrow) - 1);
                     TextView tv0 = (TextView) tr.getChildAt(0);
@@ -243,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("date", tv1.getText().toString());
                     intent.putExtra("status", tv2.getText().toString());
                     intent.putExtra("note", tv3.getText().toString());
-                    intent.putExtra("id", Integer.toString(id));
+                    intent.putExtra("id", idrow.get(id));
                 }
                 startActivity(intent);
 
@@ -286,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
             TableRow tr1 = (TableRow) tableLayout.getChildAt(i);
             TableRow tr2 = (TableRow) tableLayout.getChildAt(i + 1);
             TextView status_tv = (TextView) tr1.getChildAt(2);
-            if (status_tv.getText().toString().substring(2, 4).equals(status)) {
+            if (status_tv.getText().toString().substring(0, 2).equals(status)) {
                 if (on) {
                     tr1.setVisibility(View.GONE);
                     tr2.setVisibility(View.GONE);

@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Taskmanager" />
+        <activity android:name=".Taskmanager"
+            android:launchMode="singleTop"/>
 
         <receiver android:name=".TaskWidget">
             <intent-filter>

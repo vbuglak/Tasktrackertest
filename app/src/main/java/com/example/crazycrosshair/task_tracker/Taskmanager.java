@@ -26,8 +26,19 @@ public class Taskmanager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_taskmanager);
+
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
         intent = getIntent();
         Date_tv = (TextView) findViewById(R.id.taskmanager_date_tv);
+        EditText Task_ed = findViewById(R.id.taskmanager_task_et);
+        EditText Note_ed = findViewById(R.id.taskmanager_note_et);
+        Button addedit_but = findViewById(R.id.taskmanager_add_edit_but);
+        Task_ed.setText("");
+        Note_ed.setText("");
+        addedit_but.setText("Добавить");
         CheckBox new_checkbox = findViewById(R.id.taskmanager_status_new_cb);
         if (intent.getStringExtra("task") == null){
             setInitialDateTime();
@@ -35,10 +46,7 @@ public class Taskmanager extends AppCompatActivity {
             edit = false;
         } else {
             edit = true;
-            Button addedit_but = findViewById(R.id.taskmanager_add_edit_but);
             addedit_but.setText("Изменить");
-            EditText Task_ed = findViewById(R.id.taskmanager_task_et);
-            EditText Note_ed = findViewById(R.id.taskmanager_note_et);
             Task_ed.setText(intent.getStringExtra("task"));
             Note_ed.setText(intent.getStringExtra("note"));
             Date_tv.setText(intent.getStringExtra("date"));

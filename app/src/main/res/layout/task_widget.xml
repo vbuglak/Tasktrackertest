@@ -8,13 +8,12 @@
         android:id="@+id/task_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:background="#09C"
         android:contentDescription="@string/appwidget_text"
         android:textColor="#ffffff"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textStyle="bold|italic" />
 
     <Button
@@ -34,7 +33,7 @@
         android:layout_toEndOf="@+id/task_tv"
         android:background="#09C"
         android:textColor="#ffffff"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:textStyle="bold|italic" />
 
 </RelativeLayout>

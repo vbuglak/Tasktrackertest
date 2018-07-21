@@ -37,23 +37,26 @@ public class TaskWidget extends AppWidgetProvider {
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        Intent mintent = new Intent(context, Taskmanager.class);
-        mintent.putExtra("task", names);
-        mintent.putExtra("date", dates);
-        mintent.putExtra("status", statuss);
-        mintent.putExtra("note", notes);
-        mintent.putExtra("id",ids);
+        Intent intent = new Intent(context, Taskmanager.class);
+        intent.putExtra("task", names);
+        intent.putExtra("date", dates);
+        intent.putExtra("status", statuss);
+        intent.putExtra("note", notes);
+        intent.putExtra("id",ids);
 
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, mintent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.task_widget);
-        if (names.length()!=0) {
+        if (dates.length()!=0) {
             views.setTextViewText(R.id.task_tv, names);
             views.setTextViewText(R.id.date_tv, dates);
+            views.setTextViewText(R.id.movebut,"Перейти");
         }
         else {
             views.setTextViewText(R.id.task_tv,"Задач нет");
             views.setTextViewText(R.id.date_tv,"");
+            views.setTextViewText(R.id.movebut,"Создать");
+
         }
         views.setOnClickPendingIntent(R.id.movebut, pendingIntent);
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -70,15 +73,7 @@ public class TaskWidget extends AppWidgetProvider {
     public void update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for(int j = 0; j < appWidgetIds.length; j++) {
             int appWidgetId = appWidgetIds[j];
-            try { Intent intent = new Intent("android.intent.action.MAIN");
-                intent.addCategory("android.intent.category.LAUNCHER");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                intent.setComponent(new ComponentName("com.example.crazycrosshair.task_tracker", "MainActivity"));
-                PendingIntent pendingIntent = PendingIntent.getActivity( context, 0, intent, 0);
-                RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.task_widget);
-                views.setOnClickPendingIntent(R.id.movebut, pendingIntent);
-                appWidgetManager.updateAppWidget(appWidgetId, views);
-                Taskstorage taskstoragew = new Taskstorage(context);
+            try {Taskstorage taskstoragew = new Taskstorage(context);
                 Map<String, ?> tasks = taskstoragew.getAll();
                 Map<String, Date> dateMap = new HashMap<String, Date>();
                 for (Map.Entry entry : tasks.entrySet()) {
@@ -101,7 +96,7 @@ public class TaskWidget extends AppWidgetProvider {
                         }
                     }
                     else {
-                        names = "";
+                        dates = "";
                     }
                 }
             }

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -28,9 +29,9 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     static Taskstorage taskstorage;
-    ArrayList<String> idrow;
+    ArrayList<String> idrow; // массив для хранения id строк таблицы. Индекс масива совпадает с номером строки. Строка подразумевает два tablerow.
     TableLayout tableLayout;
-    TableRow editrow;
+    TableRow editrow; // tablerow который вызывает контекстное меню
 
 
     @Override
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         for (Map.Entry entry : tasks.entrySet()) {
             if (entry.getKey().toString().substring(0, 2).equals("da")) {  // ключ = "date"
                 Date date = DateStringToDate(entry.getValue().toString());
-                dateMap.put(entry.getKey().toString(), date);
+                dateMap.put(entry.getKey().toString(), date); // создаем map только с датами
             }
 
         }
@@ -265,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void Tb_clicked(View view) {
+    public void Tb_clicked(View view) {                     //фильтры
         boolean on = ((ToggleButton) view).isChecked();
         switch (view.getId()){
             case R.id.mainactivity_tbnew:

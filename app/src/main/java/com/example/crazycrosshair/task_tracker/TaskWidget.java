@@ -94,6 +94,9 @@ public class TaskWidget extends AppWidgetProvider {
                                 ids = entry.getKey().toString().substring(4);
                                 break;
                             }
+                            else {
+                                dates = "";
+                            }
                         } else {
                             dates = "";
                         }
